@@ -2,9 +2,18 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Button, FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 
 const API_BASE_URL = "http://10.110.12.39:3000/appointments";
+
+// 🔹 Botão customizado com efeito vidro fosco e arredondado
+function CustomButton({ title, onPress, color = 'rgba(255,255,255,0.2)' }) {
+  return (
+    <TouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
+      <Text style={styles.buttonText}>{title}</Text>
+    </TouchableOpacity>
+  );
+}
 
 export default function App() {
   const [appointments, setAppointments] = useState([]);
@@ -129,7 +138,7 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.header}>Agenda de Compromissos</Text>
       
-      <Button title="Novo Compromisso" onPress={() => setModalVisible(true)} />
+      <CustomButton title="Novo Compromisso" color="rgb(43, 255, 0)" onPress={() => setModalVisible(true)} />
       
       <FlatList
         data={appointments}
@@ -152,8 +161,8 @@ export default function App() {
             </View>
             
             <View style={styles.appointmentActions}>
-              <Button title="Editar" onPress={() => openEditModal(item)} />
-              <Button title="Excluir" color="#FF4500" onPress={() => deleteAppointment(item.id)} />
+              <CustomButton title="Editar" color="rgba(234, 255, 0, 0.84)" onPress={() => openEditModal(item)} />
+              <CustomButton title="Excluir" color="rgba(255,69,0,0.6)" onPress={() => deleteAppointment(item.id)} />
             </View>
           </View>
         )}
@@ -168,6 +177,7 @@ export default function App() {
           <TextInput
             style={styles.input}
             placeholder="Título do compromisso"
+            placeholderTextColor="#ccc"
             value={title}
             onChangeText={setTitle}
           />
@@ -175,6 +185,7 @@ export default function App() {
           <TextInput
             style={[styles.input, styles.textArea]}
             placeholder="Anotações"
+            placeholderTextColor="#ccc"
             value={notes}
             onChangeText={setNotes}
             multiline
@@ -182,7 +193,7 @@ export default function App() {
           
           <View style={styles.pickerContainer}>
             <Text style={styles.label}>Data:</Text>
-            <Button 
+            <CustomButton 
               title={date.toLocaleDateString('pt-BR')} 
               onPress={() => setShowDatePicker(true)} 
             />
@@ -201,7 +212,7 @@ export default function App() {
           
           <View style={styles.pickerContainer}>
             <Text style={styles.label}>Hora:</Text>
-            <Button 
+            <CustomButton 
               title={time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} 
               onPress={() => setShowTimePicker(true)} 
             />
@@ -232,11 +243,11 @@ export default function App() {
           </View>
           
           <View style={styles.modalButtons}>
-            <Button
+            <CustomButton color="rgb(51, 255, 0)"
               title={editingAppointment ? "Atualizar" : "Criar"}
               onPress={editingAppointment ? updateAppointment : createAppointment}
             />
-            <Button title="Cancelar" color="#666" onPress={closeModal} />
+            <CustomButton title="Cancelar" color="rgb(255, 0, 0)" onPress={closeModal} />
           </View>
         </ScrollView>
       </Modal>
@@ -248,27 +259,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1E3A8A', // Azul escuro de fundo
   },
   header: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 20,
+    color: 'white',
   },
   list: {
     marginTop: 20,
   },
   appointmentItem: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(4, 0, 255, 0.82)', // Vidro fosco
     padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
+    borderRadius: 15,
+    marginBottom: 15,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 6,
   },
   appointmentHeader: {
     flexDirection: 'row',
@@ -279,6 +291,7 @@ const styles = StyleSheet.create({
   appointmentTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: 'white',
     flex: 1,
   },
   statusBadge: {
@@ -293,7 +306,7 @@ const styles = StyleSheet.create({
   },
   appointmentNotes: {
     fontSize: 14,
-    color: '#666',
+    color: '#E5E7EB',
     marginBottom: 10,
   },
   appointmentDetails: {
@@ -303,7 +316,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 12,
-    color: '#888',
+    color: '#D1D5DB',
   },
   appointmentActions: {
     flexDirection: 'row',
@@ -312,21 +325,22 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(0, 64, 255, 0.78)', // efeito fosco no modal
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: 'white',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    borderRadius: 10,
+    padding: 12,
     marginBottom: 15,
     fontSize: 16,
+    color: 'white',
   },
   textArea: {
     height: 100,
@@ -339,14 +353,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     fontWeight: '500',
+    color: 'white',
   },
   picker: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 10,
+    color: 'white',
   },
   modalButtons: {
     marginTop: 20,
     gap: 10,
+  },
+  // 🔹 Estilos para os botões customizados
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 30, // arredondado
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
