@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 
-const API_BASE_URL = "http://10.110.12.39:3000/appointments";
+const API_BASE_URL = "http://10.110.12.47:9000/appointments";
 
 // 🔹 Botão customizado com efeito vidro fosco e arredondado
 function CustomButton({ title, onPress, color = 'rgba(255,255,255,0.2)' }) {
@@ -41,8 +41,8 @@ export default function App() {
   const createAppointment = async () => {
     try {
       const appointmentData = {
-        title,
-        notes,
+        title: title,
+        notes: notes,
         date: date.toISOString().split('T')[0],
         time: time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
         status
@@ -61,8 +61,8 @@ export default function App() {
   const updateAppointment = async () => {
     try {
       const appointmentData = {
-        title,
-        notes,
+        title: title,
+        notes: notes,
         date: date.toISOString().split('T')[0],
         time: time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
         status
